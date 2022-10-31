@@ -12,17 +12,48 @@ import {
 import { CloudService } from "./cloud.service";
 // import express, { Express } from "express";
 
+// 从Redis 获得所有服务PID
+// 用 PID 获得状态
+// 从数据库获得所有历史服务
+//
+
 @Controller("/cloud")
 export class CloudController extends AdoNodeController {
   @Inject(CloudService)
   CloudService!: CloudService;
 
+  @Get("/stats_pid")
+  public async getStatsByPid(@Query() query: any) {
+    const { pid, serverName } = query;
+    try {
+      const data = await this.CloudService.getPidStats(pid);
+      return {
+        msg: "ok",
+        code: 0,
+        data: {
+          serverName,
+          alive: data,
+        },
+      };
+    } catch (e) {
+      return {
+        msg: "err",
+        code: -1,
+        data: {
+          alive: false,
+          serverName,
+        },
+      };
+    }
+  }
+
   @Get("/stats_list")
   public async getStatsList() {
-    this.CloudService.getRedisStats();
+    const data = await this.CloudService.getStatsList();
     return {
       msg: "ok",
       code: 0,
+      data,
     };
   }
 
@@ -48,7 +79,7 @@ export class CloudController extends AdoNodeController {
 
   @Get("/server_list")
   public async getServersList() {
-    const data = await this.CloudService.getServerList();
+    const data = await this.CloudService.getServerList_Redis();
     return {
       data,
       msg: "ok",
@@ -56,7 +87,7 @@ export class CloudController extends AdoNodeController {
     };
   }
 
-  @Post("/upload")
+  @Post("/server_upload")
   public async upload(@Req() req: any, @Body() body: any) {
     const { originalname, path, size } = req.files[0];
     const { desc, port } = body;

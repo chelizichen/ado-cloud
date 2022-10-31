@@ -27,7 +27,7 @@ function before_upload(rawFile: UploadRawFile) {
   <div>
     <el-input v-model="state.data.port" />
     <el-input v-model="textarea" :rows="2" type="textarea" placeholder="Please input" />
-    <el-upload class="upload-demo" drag action="/api/cloud/upload" multiple :on-success="handle_success"
+    <el-upload class="upload-demo" drag action="/api/cloud/server_upload" multiple :on-success="handle_success"
       :data="state.data" :before-upload="before_upload">
       <el-icon class="el-icon--upload">
         <upload-filled class="el-icon--upload" />

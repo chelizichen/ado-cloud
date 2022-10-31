@@ -16,40 +16,47 @@ export class CloudService {
   @Inject(Server_Info)
   Server_Info!: Server_Info;
 
-  async getRedisStats() {
-    console.log(this.redis);
-    // await this.redis.connect();
-    if (this.redis.isOpen) {
-      this.redis.hGet("ado:server", "AdoTest3003Server").then((res) => {
-        console.log("res", res);
-      });
-    } else {
-      this.redis.connect().then(() => {
-        this.redis.hGet("ado:server", "AdoTest3003Server").then((res) => {
-          console.log("res", res);
-        });
-      });
-    }
-  }
-
-  async getStatsByServerName(serverName: string) {
+  getPidStats(pid: string) {
     return new Promise((resolve, reject) => {
-      const server_pid = this.redis.hGet("ado:server", serverName);
-      exec(`ps -ef ${server_pid}`, function (err, stdout) {
-        if (err) {
+      exec(`ps -ef ${pid}`, function (err) {
+        if (err instanceof Error) {
           reject(err);
         }
-        console.log("stdout", stdout);
-        resolve(stdout);
+        resolve(true);
       });
     });
   }
 
   async getStatsList() {
-    this.redis.hGetAll("ado:server");
+    if (!this.redis.isOpen) await this.redis.connect();
+    return new Promise((resolve, _reject) => {
+      this.redis.hGetAll("ado:server").then((res) => {
+        resolve(res);
+      });
+    });
   }
 
-  async getServerList() {
+  async getStatsByServerName(serverName: string) {
+    return new Promise(async (resolve, reject) => {
+      if (!this.redis.isOpen) await this.redis.connect();
+
+      const server_pid = await this.redis.hGet("ado:server", serverName);
+      if (server_pid) {
+        const isExist = await this.getPidStats(server_pid);
+        resolve(isExist);
+      } else {
+        reject(false);
+      }
+    });
+  }
+
+  async getServerList_Redis() {
+    if (!this.redis.isOpen) await this.redis.connect();
+    const data = await this.redis.hGetAll("ado:server");
+    return data;
+  }
+
+  async getServerList_Db() {
     const data = await this.Server_Info.getList();
     return data;
   }

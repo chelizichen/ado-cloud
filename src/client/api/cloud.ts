@@ -13,3 +13,18 @@ export function server_list() {
     method: "get",
   });
 }
+
+export function stats_list() {
+  return request({
+    url: "/api/cloud/stats_list",
+    method: "get",
+  });
+}
+
+export function stats_servername(params: any) {
+  return request({
+    url: "/api/cloud/stats_pid",
+    method: "get",
+    params,
+  });
+}

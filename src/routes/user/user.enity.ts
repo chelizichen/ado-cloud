@@ -4,6 +4,7 @@ import {
   Collect,
   Enity,
   IsEmail,
+  IsNumber,
   Key,
   Keyword,
 } from "ado-node";
@@ -11,7 +12,7 @@ import { CONSTANT } from "../../config/constant";
 
 @Enity(CONSTANT.MYSQL)
 @Collect()
-class User extends AdoOrmBaseEnity {
+export class USER_INFO extends AdoOrmBaseEnity {
   @Key
   id!: number;
 
@@ -23,8 +24,9 @@ class User extends AdoOrmBaseEnity {
 
   password!: string;
 
+  @IsNumber
+  phone!: number;
+
   @AutoCreate
   createTime!: string;
 }
-
-export { User };

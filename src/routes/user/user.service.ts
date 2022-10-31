@@ -1,11 +1,11 @@
 import { RedisClientType } from "@redis/client";
 import { Collect, Inject } from "ado-node";
-import { User } from "./user.enity";
+import { USER_INFO } from "./user.enity";
 
 @Collect()
 class UserService {
-  @Inject(User)
-  User!: User;
+  @Inject(USER_INFO)
+  USER_INFO!: USER_INFO;
 
   public getUserKey(_redis: RedisClientType<any, any, any>, UID: string) {
     const key = `sk:${UID}:qt`;
@@ -13,7 +13,7 @@ class UserService {
   }
 
   public async List() {
-    return await this.User.getList();
+    return await this.USER_INFO.getList();
   }
 }
 

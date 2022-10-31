@@ -10,7 +10,7 @@ export class CommonClass {
       host: "localhost",
       user: "root",
       password: "12345678",
-      database: "boot", //所用数据库
+      database: "ado", //所用数据库
       port: "3306",
     };
     const conn = await mysql.createConnection({
@@ -18,7 +18,6 @@ export class CommonClass {
       user: config.user,
       password: config.password,
       database: config.database,
-      multipleStatements: true,
     });
     return conn;
   }

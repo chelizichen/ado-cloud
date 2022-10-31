@@ -1,12 +1,30 @@
-import { Collect } from "ado-node";
+import { Server_Info } from "./cloud.enity";
+import { Collect, Inject } from "ado-node";
 import { exec, spawn } from "node:child_process";
+import { rename } from "node:fs";
 
 // 压缩命令
 // tar -cvf AdoTestServer.tgz ./dist package.json node_modules
 
 @Collect()
 export class CloudService {
-  getFilesList() {
+  @Inject(Server_Info)
+  Server_Info!: Server_Info;
+
+  getPortList() {}
+
+  async getServerList() {
+    const data = await this.Server_Info.getList();
+    return data;
+  }
+
+  async saveServer(val: any) {
+    console.log(val);
+
+    this.Server_Info.save(val);
+  }
+
+  getFileList() {
     return new Promise((resolve, reject) => {
       exec("ls public/server", function (err, stdou, stderr) {
         if (err) {
@@ -50,6 +68,26 @@ export class CloudService {
     });
   }
 
+  // 改名
+  re_name(oldpath: string, serverName: string) {
+    return new Promise((resolve, reject) => {
+      const newPath = "public/server/" + serverName;
+      rename(oldpath, newPath, function (err) {
+        if (err) {
+          reject(err);
+        }
+        const name_dir = serverName.substring(0, serverName.length - 4);
+        const server_path = newPath;
+        resolve({
+          name_tgz: serverName,
+          name_dir,
+          server_path,
+        });
+      });
+    });
+  }
+
+  // filename 和 originalname
   upload(fileName: string, fileAndDirName: string) {
     return new Promise((resolve, _rej) => {
       this.cd_dir(fileAndDirName).then((res) => {
@@ -63,15 +101,12 @@ export class CloudService {
                 shell: true,
                 env: process.env,
               });
+              // 存储pid 到临时的 redis 上
               console.log("c_process.pid", c_process.pid);
 
               c_process.stdout?.on("data", function (chunk) {
                 console.log("chunk", c_process.pid, chunk.toString());
               });
-
-              // childProcess.on("message", function (message) {
-              //   console.log("message", message);
-              // });
 
               resolve(fileAndDirName + " 服务开启！");
             }

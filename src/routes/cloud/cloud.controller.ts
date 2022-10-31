@@ -7,6 +7,7 @@ import {
   Post,
   Req,
   Body,
+  Query,
 } from "ado-node";
 import { CloudService } from "./cloud.service";
 // import express, { Express } from "express";
@@ -16,6 +17,25 @@ export class CloudController extends AdoNodeController {
   @Inject(CloudService)
   CloudService!: CloudService;
 
+  @Get("/stats_list")
+  public async getStatsList() {
+    this.CloudService.getRedisStats();
+    return {
+      msg: "ok",
+      code: 0,
+    };
+  }
+
+  @Get("/stats_servername")
+  public async getStatsByServerName(@Query() query: any) {
+    const { serverName } = query;
+    const data = await this.CloudService.getStatsByServerName(serverName);
+    return {
+      msg: "ok",
+      data,
+      code: 0,
+    };
+  }
   @Get("/file_list") // 目录下所含有的文件
   public async getFileList() {
     const data = await this.CloudService.getFileList();

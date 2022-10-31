@@ -1,17 +1,53 @@
 import { Server_Info } from "./cloud.enity";
-import { Collect, Inject } from "ado-node";
+import { Collect, Inject, UseCache } from "ado-node";
 import { exec, spawn } from "node:child_process";
 import { rename } from "node:fs";
+import { RedisClientType } from "redis";
+import { CONSTANT } from "../../config/constant";
 
 // 压缩命令
 // tar -cvf AdoTestServer.tgz ./dist package.json node_modules
 
 @Collect()
 export class CloudService {
+  @UseCache(CONSTANT.REDIS)
+  redis!: RedisClientType;
+
   @Inject(Server_Info)
   Server_Info!: Server_Info;
 
-  getPortList() {}
+  async getRedisStats() {
+    console.log(this.redis);
+    // await this.redis.connect();
+    if (this.redis.isOpen) {
+      this.redis.hGet("ado:server", "AdoTest3003Server").then((res) => {
+        console.log("res", res);
+      });
+    } else {
+      this.redis.connect().then(() => {
+        this.redis.hGet("ado:server", "AdoTest3003Server").then((res) => {
+          console.log("res", res);
+        });
+      });
+    }
+  }
+
+  async getStatsByServerName(serverName: string) {
+    return new Promise((resolve, reject) => {
+      const server_pid = this.redis.hGet("ado:server", serverName);
+      exec(`ps -ef ${server_pid}`, function (err, stdout) {
+        if (err) {
+          reject(err);
+        }
+        console.log("stdout", stdout);
+        resolve(stdout);
+      });
+    });
+  }
+
+  async getStatsList() {
+    this.redis.hGetAll("ado:server");
+  }
 
   async getServerList() {
     const data = await this.Server_Info.getList();
@@ -103,6 +139,13 @@ export class CloudService {
               });
               // 存储pid 到临时的 redis 上
               console.log("c_process.pid", c_process.pid);
+              this.redis.connect().then(() => {
+                this.redis.hSet(
+                  `ado:server`,
+                  fileAndDirName,
+                  `${c_process.pid}`
+                );
+              });
 
               c_process.stdout?.on("data", function (chunk) {
                 console.log("chunk", c_process.pid, chunk.toString());

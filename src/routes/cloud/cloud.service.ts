@@ -16,6 +16,28 @@ export class CloudService {
   @Inject(Server_Info)
   Server_Info!: Server_Info;
 
+  statsRestart(serverName: string) {
+    return new Promise(async (resolve) => {
+      const nodePath = `node public/server/${serverName}/dist/index.js`;
+
+      const c_process = spawn(nodePath, {
+        stdio: "pipe",
+        shell: true,
+        env: process.env,
+      });
+      // 存储pid 到临时的 redis 上
+      console.log("c_process.pid", c_process.pid);
+      if (!this.redis.isOpen) await this.redis.connect();
+      this.redis.hSet(`ado:server`, serverName, `${c_process.pid}`);
+
+      c_process.stdout?.on("data", function (chunk) {
+        console.log("chunk", c_process.pid, chunk.toString());
+      });
+
+      resolve(serverName + " 服务开启！");
+    });
+  }
+
   getPidStats(pid: string) {
     return new Promise((resolve, reject) => {
       exec(`ps -ef ${pid}`, function (err) {
@@ -42,10 +64,12 @@ export class CloudService {
 
       const server_pid = await this.redis.hGet("ado:server", serverName);
       if (server_pid) {
-        const isExist = await this.getPidStats(server_pid);
-        resolve(isExist);
-      } else {
-        reject(false);
+        try {
+          const isExist = await this.getPidStats(server_pid);
+          resolve(isExist);
+        } catch (e) {
+          reject(false);
+        }
       }
     });
   }
@@ -76,7 +100,7 @@ export class CloudService {
         console.log(stdou);
 
         const lsarray = stdou.split("\n").filter((el) => {
-          return el.endsWith(".tgz") && el;
+          return !el.endsWith(".tgz") && el;
         });
 
         resolve({ ls: lsarray, stderr });
@@ -137,28 +161,9 @@ export class CloudService {
         if (res === true) {
           this.de_comp(fileName, fileAndDirName).then((res) => {
             if (res == true) {
-              const nodePath = `node public/server/${fileAndDirName}/dist/index.js`;
-
-              const c_process = spawn(nodePath, {
-                stdio: "pipe",
-                shell: true,
-                env: process.env,
+              this.statsRestart(fileAndDirName).then((res) => {
+                resolve(res);
               });
-              // 存储pid 到临时的 redis 上
-              console.log("c_process.pid", c_process.pid);
-              this.redis.connect().then(() => {
-                this.redis.hSet(
-                  `ado:server`,
-                  fileAndDirName,
-                  `${c_process.pid}`
-                );
-              });
-
-              c_process.stdout?.on("data", function (chunk) {
-                console.log("chunk", c_process.pid, chunk.toString());
-              });
-
-              resolve(fileAndDirName + " 服务开启！");
             }
           });
         }

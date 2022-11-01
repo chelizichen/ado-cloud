@@ -23,7 +23,23 @@ export function stats_list() {
 
 export function stats_servername(params: any) {
   return request({
+    url: "/api/cloud/stats_servername",
+    method: "get",
+    params,
+  });
+}
+
+export function stats_pid(params: any) {
+  return request({
     url: "/api/cloud/stats_pid",
+    method: "get",
+    params,
+  });
+}
+
+export function stats_restart(params: any) {
+  return request({
+    url: "/api/cloud/stats_restart",
     method: "get",
     params,
   });

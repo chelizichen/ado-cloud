@@ -47,6 +47,17 @@ export class CloudController extends AdoNodeController {
     }
   }
 
+  @Get("/stats_restart")
+  public async restartServer(@Query() query: any) {
+    const { serverName } = query;
+    const data = await this.CloudService.statsRestart(serverName);
+    return {
+      msg: "ok",
+      code: 0,
+      data,
+    };
+  }
+
   @Get("/stats_list")
   public async getStatsList() {
     const data = await this.CloudService.getStatsList();
@@ -60,12 +71,20 @@ export class CloudController extends AdoNodeController {
   @Get("/stats_servername")
   public async getStatsByServerName(@Query() query: any) {
     const { serverName } = query;
-    const data = await this.CloudService.getStatsByServerName(serverName);
-    return {
-      msg: "ok",
-      data,
-      code: 0,
-    };
+    try {
+      const data = await this.CloudService.getStatsByServerName(serverName);
+      return {
+        msg: "ok",
+        data,
+        code: 0,
+      };
+    } catch (e) {
+      return {
+        msg: "error",
+        alive: false,
+        code: -1,
+      };
+    }
   }
   @Get("/file_list") // 目录下所含有的文件
   public async getFileList() {

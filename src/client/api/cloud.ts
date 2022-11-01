@@ -44,3 +44,11 @@ export function stats_restart(params: any) {
     params,
   });
 }
+
+export function stats_shutdown(params: any) {
+  return request({
+    url: "/api/cloud/stats_shutdown",
+    method: "get",
+    params,
+  });
+}

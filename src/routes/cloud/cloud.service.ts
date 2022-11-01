@@ -16,6 +16,19 @@ export class CloudService {
   @Inject(Server_Info)
   Server_Info!: Server_Info;
 
+  statsShutDown(serverName: any) {
+    return new Promise(async (resolve, reject) => {
+      if (!this.redis.isOpen) await this.redis.connect();
+      const server_pid = await this.redis.hGet("ado:server", serverName);
+      if (server_pid) {
+        process.kill(Number(server_pid));
+        resolve(true);
+      } else {
+        reject(false);
+      }
+    });
+  }
+
   statsRestart(serverName: string) {
     return new Promise(async (resolve) => {
       const nodePath = `node public/server/${serverName}/dist/index.js`;

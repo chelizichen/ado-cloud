@@ -58,6 +58,16 @@ export class CloudController extends AdoNodeController {
     };
   }
 
+  @Get("/stats_shutdown")
+  public async shutdownServer(@Query() query: any) {
+    const { serverName } = query;
+    const data = await this.CloudService.statsShutDown(serverName);
+    return {
+      msg: "ok",
+      code: 0,
+      data,
+    };
+  }
   @Get("/stats_list")
   public async getStatsList() {
     const data = await this.CloudService.getStatsList();

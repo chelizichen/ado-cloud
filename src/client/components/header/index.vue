@@ -1,9 +1,16 @@
 <template>
   <el-header class="el-header">
     <div class="flex">
-      <div style="width: 50px;height:50px">
-        <img :src="Logo" class="logo" />
+      <div class="flex">
+        <div style="width: 50px;height:50px;margin-right:20px">
+          <img :src="Logo" class="logo" />
+        </div>
+        <div class="cumulus">Cumulus</div>
+
+        <div class="cumulus">@Ado/Cloud</div>
+
       </div>
+
       <div>
         <el-menu mode="horizontal" :ellipsis="false">
           <el-menu-item index="1">服务</el-menu-item>
@@ -33,6 +40,15 @@ import Logo from '@/assets/cumulus.jpeg'
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    .cumulus {
+      font-size: 25px;
+      font-weight: 700;
+      font-style: oblique;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      color: #007979;
+      margin: 0 10px;
+    }
   }
 
   .logo {

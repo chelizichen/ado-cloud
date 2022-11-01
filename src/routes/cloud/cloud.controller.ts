@@ -22,6 +22,16 @@ export class CloudController extends AdoNodeController {
   @Inject(CloudService)
   CloudService!: CloudService;
 
+  @Get("/port_list")
+  public async getPortList() {
+    const data = await this.CloudService.getPortList();
+    return {
+      code: 0,
+      msg: "ok",
+      data,
+    };
+  }
+
   @Get("/stats_pid")
   public async getStatsByPid(@Query() query: any) {
     const { pid, serverName } = query;
@@ -85,7 +95,7 @@ export class CloudController extends AdoNodeController {
       const data = await this.CloudService.getStatsByServerName(serverName);
       return {
         msg: "ok",
-        data,
+        alive: data,
         code: 0,
       };
     } catch (e) {
@@ -132,6 +142,7 @@ export class CloudController extends AdoNodeController {
     inst.desc = desc;
     inst.size = size;
     inst.serverName = name_dir;
+
     this.CloudService.saveServer(inst);
 
     return {

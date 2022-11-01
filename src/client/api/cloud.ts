@@ -52,3 +52,10 @@ export function stats_shutdown(params: any) {
     params,
   });
 }
+
+export function port_list() {
+  return request({
+    url: "/api/cloud/port_list",
+    method: "get",
+  });
+}

@@ -1,55 +1,71 @@
 <template>
-  <div>
+  <el-card class="box-card">
+    <template #header>
+      <div class="card-header">
+        <span>服务列表</span>
+        <el-button class="button" text>过滤</el-button>
+      </div>
+    </template>
     <div v-for="item in state.exist_list " :key="item" class="server_item">
-      <div>{{ item.serverName }}</div>
-      <el-switch v-model="item.data.alive" @change="loadServer(item)" />
-
+      <div class="flex margin">
+        <div class="server_name">{{ item.serverName }}</div>
+        <el-switch v-model="item.data.alive" @change='emit("loadServer", item)' />
+      </div>
     </div>
-
-  </div>
+  </el-card>
 </template>
 
 <script setup lang="ts">
-import { file_list, stats_restart, stats_servername, stats_shutdown } from '@/api/cloud';
-import { reactive, onMounted } from 'vue';
+import { ElCard, ElButton, ElSwitch } from 'element-plus';
+import { onMounted, onUpdated, reactive, watch } from 'vue';
+
+const props = defineProps<{
+  stats_list: Array<any>,
+  file_list: Array<any>,
+  exist_list: Array<any>
+}>()
 const state = reactive({
-  stats_list: <Record<string, any>>[],
-  file_list: [],
-  exist_list: <any[]>[]
+  dialogVs: false,
+  exist_list: [] as any[]
 })
+watch(props, async (newVal) => {
+  state.exist_list = await Promise.all(newVal.exist_list)
+})
+const emit = defineEmits(["loadServer"])
 
-async function getServerAliveList() {
-  const f_data = await file_list();
-  state.file_list = f_data.data.ls
-  state.file_list.forEach(async el => {
-    const data = await stats_servername({ serverName: el })
-    state.exist_list.push({
-      data,
-      serverName: el
-    })
-    // @ts-ignore
-    // if (!data.alive) {
-    //   // 重启
-    //   stats_restart({ serverName: el })
-    // }
-  })
-}
-
-async function loadServer(item: any) {
-  const { serverName, data: { alive } } = item
-  if (alive) {
-    stats_restart({ serverName })
-  } else {
-    stats_shutdown({ serverName })
-  }
-}
+onUpdated(() => {
+  console.log("父组件状态更新");
+})
 
 
 onMounted(() => {
-  getServerAliveList()
 })
 </script>
 
 <style scoped>
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
+.box-card {
+  width: 49%;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.magin {
+  margin: 5px;
+}
+
+.server_name {
+  font-size: 20px;
+  color: darkblue;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 </style>

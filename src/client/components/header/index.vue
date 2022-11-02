@@ -1,7 +1,7 @@
 <template>
   <el-header class="el-header">
     <div class="flex">
-      <div class="flex">
+      <div class="flex" @click="router.push(`/home`)">
         <div style="width: 50px;height:50px;margin-right:20px">
           <img :src="Logo" class="logo" />
         </div>
@@ -24,6 +24,8 @@
 
 <script setup lang="ts">
 import Logo from '@/assets/cumulus.jpeg'
+import { useRouter } from 'vue-router';
+const router = useRouter()
 </script>
 
 <style scoped lang="less">

@@ -9,6 +9,16 @@ let routes: RouteRecordRaw[] = [
     component: () => import("@/pages/home/index.vue"),
   },
   {
+    path: "/log",
+    component: () => import("@/pages/log/index.vue"),
+    children: [
+      {
+        path: ":serverName",
+        component: () => import("@/pages/log/server.vue"),
+      },
+    ],
+  },
+  {
     path: "/user",
     component: () => import("@/pages/user/index.vue"),
   },

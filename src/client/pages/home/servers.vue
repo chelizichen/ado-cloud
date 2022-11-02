@@ -8,7 +8,7 @@
     </template>
     <div v-for="item in state.exist_list " :key="item" class="server_item">
       <div class="flex margin">
-        <div class="server_name">{{ item.serverName }}</div>
+        <div class="server_name" @click="toLog(item.serverName)">{{ item.serverName }}</div>
         <el-switch v-model="item.data.alive" @change='emit("loadServer", item)' />
       </div>
     </div>
@@ -18,6 +18,9 @@
 <script setup lang="ts">
 import { ElCard, ElButton, ElSwitch } from 'element-plus';
 import { onMounted, onUpdated, reactive, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+
+
 
 const props = defineProps<{
   stats_list: Array<any>,
@@ -28,10 +31,16 @@ const state = reactive({
   dialogVs: false,
   exist_list: [] as any[]
 })
+const router = useRouter();
+
 watch(props, async (newVal) => {
   state.exist_list = await Promise.all(newVal.exist_list)
 })
 const emit = defineEmits(["loadServer"])
+
+function toLog(serverName: string) {
+  router.push(`/log/${serverName}`)
+}
 
 onUpdated(() => {
   console.log("父组件状态更新");

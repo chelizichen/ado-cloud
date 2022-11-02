@@ -59,3 +59,11 @@ export function port_list() {
     method: "get",
   });
 }
+
+export function log_serverName(params: any) {
+  return request({
+    url: "/api/log/serverName",
+    method: "get",
+    params,
+  });
+}

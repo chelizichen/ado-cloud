@@ -4,7 +4,8 @@ import { exec, spawn } from "node:child_process";
 import { rename, appendFile } from "node:fs";
 import { RedisClientType } from "redis";
 import { CONSTANT } from "../../config/constant";
-
+import { Event } from "../../config/common";
+// import readPkg from "read-package";
 // 压缩命令
 // tar -cvf AdoTestServer.tgz ./dist package.json node_modules
 
@@ -30,6 +31,11 @@ export class CloudService {
   }
 
   statsRestart(serverName: string) {
+    // 规定 tar 打包服务 规定 node 运行服务
+    // const path = `public/server/${serverName}`;
+    // const dt = readPkg(path);
+    // console.log("dt.scripts", dt.scripts.tar);
+
     return new Promise(async (resolve, reject) => {
       const nodePath = `node public/server/${serverName}/dist/index.js`;
 
@@ -54,10 +60,11 @@ export class CloudService {
             if (err) {
               reject(err);
             }
+            Event.emit(`${serverName}:ws`, chunk.toString());
+            // event.emit("")
             console.log(`${log_file_path} 服务写入正常`);
           }
         );
-        console.log("chunk", serverName, chunk.toString());
       });
 
       c_process.on("exit", function () {

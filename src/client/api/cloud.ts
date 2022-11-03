@@ -67,3 +67,10 @@ export function log_serverName(params: any) {
     params,
   });
 }
+
+export function server_list_db() {
+  return request({
+    url: "/api/cloud/server_list_db",
+    method: "get",
+  });
+}

@@ -1,12 +1,10 @@
 <template>
   <div>
-    <!-- <h1>日志输出页面</h1> -->
-    <router-view></router-view>
+    <div>User 目录</div>
   </div>
 </template>
 
 <script setup lang="ts">
-
 
 </script>
 

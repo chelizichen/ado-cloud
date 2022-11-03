@@ -151,4 +151,14 @@ export class CloudController extends AdoNodeController {
       code: 0,
     };
   }
+
+  @Get("/server_list_db")
+  public async getServerList_Db() {
+    const data = await this.CloudService.getServerList_Db();
+    return {
+      data,
+      msg: "ok",
+      code: 0,
+    };
+  }
 }

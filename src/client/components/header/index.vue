@@ -1,7 +1,7 @@
 <template>
   <el-header class="el-header">
     <div class="flex">
-      <div class="flex" @click="router.push(`/home`)">
+      <div class="flex" @click="router.push(`/home`)" style="cursor: pointer;">
         <div style="width: 50px;height:50px;margin-right:20px">
           <img :src="Logo" class="logo" />
         </div>
@@ -12,10 +12,10 @@
       </div>
 
       <div>
-        <el-menu mode="horizontal" :ellipsis="false">
-          <el-menu-item index="1">服务</el-menu-item>
+        <el-menu mode="horizontal" :ellipsis="false" :default-active="`1`">
+          <el-menu-item index="1" @click="router.push(`/home`)">服务</el-menu-item>
           <el-menu-item index="2">状态</el-menu-item>
-          <el-menu-item index="3">管理</el-menu-item>
+          <el-menu-item index="3" @click="router.push(`/manage`)">管理</el-menu-item>
         </el-menu>
       </div>
     </div>

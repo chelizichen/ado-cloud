@@ -22,6 +22,16 @@ let routes: RouteRecordRaw[] = [
     path: "/user",
     component: () => import("@/pages/user/index.vue"),
   },
+  {
+    path: "/manage",
+    component: () => import("@/pages/manage/index.vue"),
+    children: [
+      {
+        path: "user",
+        component: () => import("@/manage/user/index.vue"),
+      },
+    ],
+  },
 ];
 const router = createRouter({
   routes,

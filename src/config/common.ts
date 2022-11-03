@@ -1,5 +1,6 @@
 import { CreateCache, CreateDataBase, Config } from "ado-node";
 import * as mysql from "mysql";
+import { EventEmitter } from "node:stream";
 import { createClient } from "redis";
 import { CONSTANT } from "./constant";
 @Config
@@ -26,3 +27,5 @@ export class CommonClass {
     return createClient();
   }
 }
+
+export const Event = new EventEmitter();

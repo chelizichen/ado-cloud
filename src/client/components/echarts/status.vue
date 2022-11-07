@@ -14,6 +14,7 @@ const state = reactive({
   echarts_data: [] as Array<any>,
   myChart: null as any
 })
+
 const options = ref({
   title: {
     text: '状态',

@@ -5,7 +5,7 @@ import { rename, appendFile } from "node:fs";
 import { RedisClientType } from "redis";
 import { CONSTANT } from "../../config/constant";
 import { Event } from "../../config/common";
-// import readPkg from "read-package";
+import readPkg from "read-package";
 // 压缩命令
 // tar -cvf AdoTestServer.tgz ./dist package.json node_modules
 
@@ -32,24 +32,31 @@ export class CloudService {
 
   statsRestart(serverName: string) {
     // 规定 tar 打包服务 规定 node 运行服务
-    // const path = `public/server/${serverName}`;
-    // const dt = readPkg(path);
-    // console.log("dt.scripts", dt.scripts.tar);
+    const path = `public/server/${serverName}`;
+    const json = readPkg(path);
+    const start = json.scripts.start;
 
     return new Promise(async (resolve, reject) => {
-      const nodePath = `node public/server/${serverName}/dist/index.js`;
+      let c_process;
+      if (start) {
+        console.log("走start 这一步", start);
 
-      const c_process = spawn(nodePath, {
-        stdio: "pipe",
-        shell: true,
-        env: process.env,
-      });
-      // 存储pid 到临时的 redis 上
-      console.log("c_process.pid", c_process.pid);
+        c_process = spawn(`cd ${path} \n ${start}`, {
+          stdio: "pipe",
+          shell: true,
+          env: process.env,
+        });
+      } else {
+        const nodePath = `node public/server/${serverName}/dist/index.js`;
+        c_process = spawn(nodePath, {
+          stdio: "pipe",
+          shell: true,
+          env: process.env,
+        });
+      }
       if (!this.redis.isOpen) await this.redis.connect();
       this.redis.hSet(`ado:server:pid`, serverName, `${c_process.pid}`);
 
-      // 日志监控输出
       c_process.stdout?.on("data", function (chunk) {
         const log_file_path = `public/server/${serverName}/log.txt`;
         appendFile(
@@ -61,7 +68,6 @@ export class CloudService {
               reject(err);
             }
             Event.emit(`${serverName}:ws`, chunk.toString());
-            // event.emit("")
             console.log(`${log_file_path} 服务写入正常`);
           }
         );

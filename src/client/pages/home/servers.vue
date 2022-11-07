@@ -76,5 +76,6 @@ onMounted(() => {
   font-size: 20px;
   color: darkblue;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  cursor: pointer;
 }
 </style>

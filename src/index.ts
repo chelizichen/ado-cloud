@@ -8,9 +8,10 @@ import { CloudModule } from "./routes/cloud/cloud.module";
 import cors from "cors";
 import ws from "express-ws";
 import { Event } from "./config/common";
+import { CodeModule } from "./routes/code/code.module";
 @AdoNodeConfig(CommonClass)
 @Modules({
-  Modules: [UserModule, CloudModule],
+  Modules: [UserModule, CloudModule, CodeModule],
   Base: "/api",
   Port: 3001,
   GlobalPipes: [LogPipe],

@@ -32,6 +32,10 @@ let routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: "/code",
+    component: () => import("@/pages/code/index.vue"),
+  },
 ];
 const router = createRouter({
   routes,

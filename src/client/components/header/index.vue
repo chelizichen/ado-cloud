@@ -13,9 +13,11 @@
 
       <div>
         <el-menu mode="horizontal" :ellipsis="false" :default-active="`1`">
+          <el-menu-item index="0" @click="router.push(`/code`)">代码</el-menu-item>
           <el-menu-item index="1" @click="router.push(`/home`)">服务</el-menu-item>
           <el-menu-item index="2">状态</el-menu-item>
           <el-menu-item index="3" @click="router.push(`/manage`)">管理</el-menu-item>
+
         </el-menu>
       </div>
     </div>

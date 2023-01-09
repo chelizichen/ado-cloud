@@ -1,10 +1,11 @@
 import path from "path";
 import { defineConfig } from "vite";
 import { createHtmlPlugin } from "vite-plugin-html";
-import { config } from "./src/config";
 import vue from "@vitejs/plugin-vue";
-// https://vitejs.dev/config/
+import {config} from './src/config/index'
+
 export default defineConfig({
+  root:process.cwd(),
   plugins: [
     vue(),
     createHtmlPlugin({
@@ -14,16 +15,15 @@ export default defineConfig({
       inject: {
         data: {
           title: config.title,
-          injectScript: config.injectScript,
         },
       },
     }),
   ],
   server: {
-    port: 3000,
+    port: 5004,
     proxy: {
       "/api": {
-        target: `http://localhost:3001`,
+        target: `http://localhost:5005`,
         changeOrigin: true,
         // rewrite: (path) => path.replace(/^\/api/, "/api"),
       },
@@ -31,6 +31,21 @@ export default defineConfig({
   },
   build: {
     outDir: "dist/app",
+    chunkSizeWarningLimit: 1500,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            return id
+              .toString()
+              .split("node_modules/")[1]
+              .split("/")[0]
+              .toString();
+          }
+          return 
+        },
+      },
+    },
   },
   resolve: {
     alias: {

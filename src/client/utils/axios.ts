@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 const request = axios.create({
   timeout: 50000,
   headers: { "Content-Type": "application/json;charset=utf-8" },
+  baseURL:"/api/"
 });
 
 // 请求拦截器

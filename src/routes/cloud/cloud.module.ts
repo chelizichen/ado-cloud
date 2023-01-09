@@ -1,9 +1,8 @@
-import { LogModule } from "./../log/log.module";
 import { Module } from "ado-node";
-import { CloudController } from "./cloud.controller";
+import { cloudController } from './cloud.controller'
 
 @Module({
-  Controller: [CloudController],
-  Provider: [LogModule],
+  Controller:[cloudController],
+  Provider:[]
 })
-export class CloudModule {}
+export class cloudModule{}

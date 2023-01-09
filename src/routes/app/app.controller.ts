@@ -1,10 +1,10 @@
 import { AdoNodeController,Controller,Get,Inject } from "ado-node";
-import { cloudService } from './cloud.service';
+import { appService } from './app.service';
 
-@Controller("/cloud")
-export class cloudController extends AdoNodeController{
-  @Inject(cloudService)
-  cloudService!: cloudService
+@Controller("/app")
+export class appController extends AdoNodeController{
+  @Inject(appService)
+  appService!: appService
   
 
   @Get("/test")

@@ -5,19 +5,13 @@
         <div style="width: 50px;height:50px;margin-right:20px">
           <img :src="Logo" class="logo" />
         </div>
-        <div class="cumulus">Cumulus</div>
-
-        <div class="cumulus">@Ado/Cloud</div>
-
+        <div class="cumulus">ado-cloud</div>
       </div>
-
       <div>
         <el-menu mode="horizontal" :ellipsis="false" :default-active="`1`">
-          <el-menu-item index="0" @click="router.push(`/code`)">代码</el-menu-item>
-          <el-menu-item index="1" @click="router.push(`/home`)">服务</el-menu-item>
-          <el-menu-item index="2">状态</el-menu-item>
-          <el-menu-item index="3" @click="router.push(`/manage`)">管理</el-menu-item>
-
+          <el-menu-item index="1" @click="router.push(`/home/index`)">首页</el-menu-item>
+          <el-menu-item index="3" @click="router.push(`/admin`)">管理</el-menu-item>
+          <el-menu-item index="4" @click="router.push(`/home/login`)">登陆</el-menu-item>
         </el-menu>
       </div>
     </div>

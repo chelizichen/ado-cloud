@@ -1,4 +1,4 @@
 export let config = {
-  title: "Ado-Cloud",
+  title: "ado-cloud",
   injectScript: `<script src="${__dirname}/inject.js"></script>`,
 };

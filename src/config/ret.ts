@@ -1,8 +1,8 @@
-export class Ret {
-  static Message<T>(code: number, msg: string, data: T) {
+export class ret {
+  static success<T>(data: T) {
     return {
-      code,
-      msg,
+      code:200,
+      msg:"ok",
       data,
     };
   }

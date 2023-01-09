@@ -1,6 +1,6 @@
 import { AdoOrmBaseEntity, Entity } from "ado-node";
 
-@Entity("cloud")
+@Entity("server")
 export class cloud extends AdoOrmBaseEntity{
 
 }

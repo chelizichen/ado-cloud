@@ -13,6 +13,7 @@ class AdoNodeServerImpl extends AdoNodeServer {}
 
 AdoNodeServerImpl.runSSRServer((app: Express) => {
   app.use(express.static("dist/app"));
+  app.use("/cloudserver",express.static("public/server"))
   app.use(cors());
 
   app.get("*", (_req, res) => {

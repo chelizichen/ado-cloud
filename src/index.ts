@@ -4,7 +4,7 @@ import path from "path";
 import cors from "cors";
 import { appModule } from "./routes/app/app.module";
 import { LogGlobalPipe } from "./pipe/Log.pipe";
-
+import multer from "multer";
 @Modules({
   Modules: [appModule],
   GlobalPipes: [LogGlobalPipe],
@@ -15,7 +15,7 @@ AdoNodeServerImpl.runSSRServer((app: Express) => {
   app.use(express.static("dist/app"));
   app.use("/cloudserver",express.static("public/server"))
   app.use(cors());
-
+  app.use(multer({ dest: "public/server" }).any());
   app.get("*", (_req, res) => {
     res.sendFile(path.join(__dirname, "app/index.html"));
   });

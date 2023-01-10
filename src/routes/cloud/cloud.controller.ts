@@ -1,4 +1,5 @@
 import { AdoNodeController,Body,Controller,Get,Inject, Post, Query, Req } from "ado-node";
+import { writeFileSync } from "fs";
 import { ret } from "../../config/ret";
 import { QueryId } from "../../types";
 import { cloud } from "./cloud.entity";
@@ -29,8 +30,8 @@ export class cloudController extends AdoNodeController{
   async upload(@Req() req: any, @Body() body: any){
     console.log('req',req.files);
     console.log("body",body);
-
-
+    // 测试上传
+    writeFileSync('public/server/test.jpg',req.files[0].buffer)
     return ret.success("ok")
   }
 

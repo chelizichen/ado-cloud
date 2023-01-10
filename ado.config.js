@@ -12,6 +12,6 @@ module.exports =  ({
   server:{
     port:5005,
     base:"/api",
-    upload:"public/server"
+    upload:"/public/server"
   }
 });

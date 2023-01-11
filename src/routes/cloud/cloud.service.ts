@@ -26,6 +26,8 @@ export class cloudService {
             }
             // 进入当前目录 并且执行
             let run_cmd = `cd ${get_dir} \n npm run preview`;
+            console.log('run_cmd',run_cmd);
+            
             let c_process = spawn(run_cmd, {
               stdio: "pipe",
               shell: true,
@@ -42,18 +44,20 @@ export class cloudService {
     }
 
     update() {
-        // const std = spawn(
-        //   `cd public/server/AdoNodeTestServer \n npm run preview`,
-        //   {
-        //     stdio: "pipe",
-        //     shell: true,
-        //     env: process.env,
-        //   }
-        // );
+        console.log("执行");
+        
+        const std = spawn(
+          `cd public/server/AdoNodeTestServer && npm run preview`,
+          {
+            stdio: "pipe",
+            shell: true,
+            env: process.env,
+          }
+        );
 
-        // std.stdout.on("data", function (chunk) {
-        //     console.log('写入',chunk.toString());
-        // })
+        std.stdout.on("data", function (chunk) {
+            console.log('写入',chunk.toString());
+        })
         
     }
 

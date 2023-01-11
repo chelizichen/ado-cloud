@@ -10,13 +10,10 @@ export class cloudController extends AdoNodeController {
   @Inject(cloudService)
   cloudService!: cloudService
 
-  @Get("/test")
-  hello() {
-    return {
-      msg: "ok",
-      code: 0,
-      data: "hello world"
-    }
+  @Get("/list")
+  async list() {
+    const data = await this.cloudService.list()
+    return ret.success(data)
   }
 
 

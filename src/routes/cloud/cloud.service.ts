@@ -1,7 +1,8 @@
 import { Collect, Inject } from "ado-node";
 import { cloud } from "./cloud.entity";
 import { spawn, exec } from "node:child_process";
-import { mkdirSync } from 'fs'
+import { mkdirSync,readdirSync } from 'fs'
+// import readpkg from 'read-package'
 @Collect()
 export class cloudService {
     @Inject(cloud)
@@ -10,6 +11,22 @@ export class cloudService {
     run(uu_id: string) {
         return uu_id
     }
+
+    async list(){
+        let _list:any[] = []
+        let _dir = readdirSync("public/server")
+        for(let i = 0;i<_dir.length;i++){
+            let _curr = _dir[i]
+            if(!_curr.endsWith(".tgz")){
+                const _port = require(process.cwd()+"/public/server/"+_curr+"/ado.config.js")
+                console.log('_port',_port);
+                let _item = {port:_port,server:_curr}
+                _list.push(_item)
+            }
+        }
+        return _list
+    }
+
 
     run_upload(file_path: string) {
         return new Promise(async (resolve,reject) => {
@@ -25,7 +42,7 @@ export class cloudService {
                 reject(e);
             }
             // 进入当前目录 并且执行
-            let run_cmd = `cd ${get_dir} \n npm run preview`;
+            let run_cmd = `cd ${get_dir} &&  npm run preview`;
             console.log('run_cmd',run_cmd);
             
             let c_process = spawn(run_cmd, {

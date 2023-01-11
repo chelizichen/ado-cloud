@@ -8,12 +8,22 @@
     </template>
     <div class="card-header">
       <!-- <StatusCharts :exist_list="state.exist_list"></StatusCharts> -->
-      <div style="width: 50%;">
-        <el-timeline>
-          <el-timeline-item v-for="(item, index) in props.port_list" :key="index" :timestamp="item.port">
+      <div style="width: 100%;">
+        <div v-for="(item,index) in state.server_list" style="width:100%">
+          <div class="item">
+            <div>
+              {{ index+1 }} : {{ item.server }}
+            </div>
+            <div @click="to_port(item.port.server.port)" class="to_port">
+              占用端口：{{ item.port.server.port }}
+            </div>
+          </div>
+        </div>
+        <!-- <el-timeline>
+          <el-timeline-item v-for="(item, index) in state.server_list" :key="index" :timestamp="item.port">
             {{ item.key }}
           </el-timeline-item>
-        </el-timeline>
+        </el-timeline> -->
       </div>
     </div>
     <Upload :dialog-table-visible="state.dialogVs" @handle-close="handleClose"></Upload>
@@ -21,25 +31,27 @@
 
 </template>
 <script setup lang="ts">
-import { reactive, onMounted, watch } from 'vue';
+import { reactive, onMounted } from 'vue';
 import Upload from '@/components/upload/index.vue'
-import {test} from '@/api/cloud'
+import {test,list} from '@/api/cloud'
 // import StatusCharts from '@/components/echarts/status.vue'
 
-const props = defineProps<{
-  exist_list: Array<any>,
-  port_list: Array<any>
-}>()
-const state = reactive({
+type _state = {
+  dialogVs:boolean;
+  server_list:any[]
+}
+
+const state:_state = reactive({
   dialogVs: false,
-  exist_list: [] as any[]
-})
-watch(props, async (newVal) => {
-  state.exist_list = await Promise.all(newVal.exist_list)
+  server_list:[]
 })
 
-onMounted(() => {
+onMounted(async () => {
   test()
+  const data = await list()
+  state.server_list = data.data
+  console.log('data',data);
+  
 })
 
 function changeVs() {
@@ -50,21 +62,29 @@ function handleClose() {
   state.dialogVs = false
 }
 
+function to_port(port:string){
+  window.open("http://localhost:"+port)
+}
+
 
 </script>
-<style>
+<style lang="less" scoped>
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  .item{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .to_port{
+      cursor: pointer;
+    }
+  }
 }
 
 .text {
   font-size: 14px;
-}
-
-.item {
-  margin-bottom: 18px;
 }
 
 .box-card {

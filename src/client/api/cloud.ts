@@ -10,7 +10,7 @@ export function list() {
 
 export function test(){
   return request({
-    url: "cloud/test",
-    method: "get",
+    url: "cloud/update",
+    method: "post",
   });
 }

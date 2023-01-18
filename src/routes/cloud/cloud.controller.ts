@@ -16,7 +16,6 @@ export class cloudController extends AdoNodeController {
     return ret.success(data)
   }
 
-
   @Get("/run")
   async run(@Query() query: QueryId) {
     const data = await this.cloudService.run(query.id)
@@ -45,5 +44,17 @@ export class cloudController extends AdoNodeController {
     return ret.success("成功")
   }
 
+  @Get("/restart")
+  async restart(@Query() query: any) {
+    const server_name = query.server_name;
+    const data = await this.cloudService.restart(server_name);
+    return ret.success(data)
+  }
 
+  @Get("/kill")
+  async kill(@Query() query: any) {
+    const port = query.port;
+    const data = await this.cloudService.kill(port)
+    return ret.success(data)
+  }
 }

@@ -2,7 +2,7 @@
   <el-card class="box-card">
     <template #header>
       <div class="card-header">
-        <span>服务总状态</span>
+        <span>服务列表</span>
         <el-button class="button" text @click="changeVs">上传服务</el-button>
       </div>
     </template>
@@ -11,7 +11,7 @@
       <div style="width: 100%;">
         <div v-for="(item,index) in state.server_list" style="width:100%">
           <div class="item">
-            <div>
+            <div class="item_server" @click="to_server(item)">
               {{ index+1 }} : {{ item.server }}
             </div>
             <div @click="to_port(item.port.server.port)" class="to_port">
@@ -34,11 +34,15 @@
 import { reactive, onMounted } from 'vue';
 import Upload from '@/components/upload/index.vue'
 import {test,list} from '@/api/cloud'
+import router from '@/router';
 // import StatusCharts from '@/components/echarts/status.vue'
 
 type _state = {
-  dialogVs:boolean;
-  server_list:any[]
+  dialogVs: boolean;
+  server_list: Array<{
+    server: string,
+    port:any
+}>
 }
 
 const state:_state = reactive({
@@ -66,6 +70,19 @@ function to_port(port:string){
   window.open("http://localhost:"+port)
 }
 
+function to_server(item: any) {
+  console.log(item);
+  
+  router.push({
+    path: "/server",
+    query: {
+      server_name: item.server,
+      public_path: item.port.server.upload,
+      port: item.server.port,
+    }
+  })
+}
+
 
 </script>
 <style lang="less" scoped>
@@ -80,6 +97,13 @@ function to_port(port:string){
     .to_port{
       cursor: pointer;
     }
+  }
+  .item_server{
+    cursor: pointer;
+  }
+  .item_server:hover{
+    color: rgb(113, 113, 113);
+
   }
 }
 

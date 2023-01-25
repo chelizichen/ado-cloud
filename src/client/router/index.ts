@@ -8,6 +8,10 @@ let routes: RouteRecordRaw[] = [
     path: "/home",
     component: () => import("@/pages/home/index.vue"),
   },
+  {
+    path: "/server",
+    component: () => import("@/pages/server/index.vue"),
+  },
 ];
 const router = createRouter({
   routes,

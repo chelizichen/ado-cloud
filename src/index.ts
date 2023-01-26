@@ -5,6 +5,7 @@ import cors from "cors";
 import { appModule } from "./routes/app/app.module";
 import { LogGlobalPipe } from "./pipe/Log.pipe";
 import multer from "multer";
+import { ws_server_controller } from "./ws/server.controller";
 @Modules({
   Modules: [appModule],
   GlobalPipes: [LogGlobalPipe],
@@ -12,6 +13,9 @@ import multer from "multer";
 class AdoNodeServerImpl extends AdoNodeServer {}
 
 AdoNodeServerImpl.runSSRServer((app: Express) => {
+
+  ws_server_controller(app);
+  
   app.use(express.static("dist/app"));
   app.use("/cloudserver",express.static("public/server"))
   app.use(cors());

@@ -7,8 +7,7 @@ const trim_directive = (app:App<Element>) => {
       binding: DirectiveBinding<any>,
       vnode: VNode<any, any, { [key: string]: any }>,
     ) {
-      console.log("el", el.innerHTML);
-      el.innerHTML = (el.innerHTML as string).trim()
+      el.innerHTML = (el.innerHTML as string).replace(/\s+/g, "")
     },
   });
 }

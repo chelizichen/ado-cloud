@@ -6,6 +6,7 @@
         <el-option v-for="item in options" :key="item" :label="item" :value="item" />
       </el-select> -->
       <el-input v-model="textarea" :rows="5" type="textarea" placeholder="添加描述信息" />
+      <el-input v-model="state.version" type="textarea" placeholder="请输入版本号" />
       <el-upload class="upload-demo" action="/api/cloud/upload" multiple :on-success="handle_success"
         :data="state.data" :before-upload="before_upload" ref="uploadRef" :auto-upload="false">
         <el-icon class="el-icon--upload">
@@ -42,8 +43,9 @@ const textarea = ref('')
 const state = reactive({
   data: {
     desc: "",
-    name:""
+    name: "",
   },
+  version: ""
 })
 
 
@@ -53,7 +55,10 @@ function handle_success(res: any) {
 }
 function before_upload(rawFile: UploadRawFile) {
   console.log("rawFile", rawFile);
-  state.data.name = rawFile.name;
+  // state.data.name = rawFile.name + state.version;
+  let file_name_tostr = rawFile.name.split("")
+  file_name_tostr.splice(file_name_tostr.length - 4, 0, "."+state.version)
+  state.data.name = file_name_tostr.join("")
   console.log(uploadRef.value);
   
   state.data.desc = textarea.value

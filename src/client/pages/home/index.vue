@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { reactive, onMounted } from 'vue';
 import Upload from '@/components/upload/index.vue'
-import {test,list} from '@/api/cloud'
+import { test, list } from '@/api/cloud'
 import router from '@/router';
 // import StatusCharts from '@/components/echarts/status.vue'
 
@@ -51,7 +51,7 @@ const state:_state = reactive({
 })
 
 onMounted(async () => {
-  test()
+  // test()
   const data = await list()
   state.server_list = data.data
   console.log('data',data);
@@ -78,7 +78,8 @@ function to_server(item: any) {
     query: {
       server_name: item.server,
       public_path: item.port.server.upload,
-      port: item.server.port,
+      port: item.port.server.port,
+      desc:item.port.server.desc
     }
   })
 }

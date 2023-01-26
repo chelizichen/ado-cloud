@@ -2,11 +2,13 @@ import { Collect, Inject } from "ado-node";
 import { cloud } from "./cloud.entity";
 import { spawn, exec } from "node:child_process";
 import { mkdirSync, readdirSync } from 'fs'
-// import readpkg from 'read-package'
+import { get_port_status, timeout } from "../../utils";
+
 @Collect()
 export class cloudService {
     @Inject(cloud)
     Cloud!: cloud
+
 
     run(uu_id: string) {
         return uu_id
@@ -112,20 +114,23 @@ export class cloudService {
         }
 
     }
-    
-    kill(port: number) {
-        return new Promise((resolve, reject) => {
-            let cmd = "lsof -i:" + port + "| awk 'NR==2{print $2}' ";
-            const kill_process = exec(cmd)
-            kill_process.stdout?.on('data', function (chunk) {
-                let pid: number = chunk.toString();
-                if (pid && !isNaN(pid)) {
-                    resolve(true);
-                    let kill_cmd = 'kill -9 ' + pid
-                    exec(kill_cmd)
-                }
-                reject(false)
-            })
-        })
+
+    async kill(port: number) {
+        const port_or_false: number = await this.get_port_status(port) as number;
+        if (port_or_false && !isNaN(port_or_false)) {
+            let kill_cmd = "kill -9 " + port_or_false;
+            exec(kill_cmd);
+            return true
+        }
+        return false
+    }
+
+    async get_port_status(port: number): Promise<any> {
+        try {
+            const data = await Promise.race([get_port_status(port), timeout()]) as number;
+            return data;
+        } catch (e) {
+            return false
+        }
     }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="box">
     <el-card class="box-card">
       <template #header>
         <div class="card-header">
@@ -16,6 +16,22 @@
       <div v-trim>服务地址： {{ state.public_path }}/ {{ state.server_name }}</div>
       <div>服务描述：{{ state.desc }}</div>
     </el-card>
+    
+    <el-card class="box-card">
+      <template #header>
+        <div class="flex_sb">
+          <div> 关联服务 </div>
+          <el-button type="primary">上传关联服务</el-button>
+        </div>
+      </template>
+      <div>
+        <div v-for="item in server_all" class="list">
+          <div v-trim class="to_relevance" @click="to_relevance(item)">{{ item.host }}:{{ item.port }}</div>
+          <div>{{ item.desc }}</div>
+        </div>
+      </div>
+    </el-card>
+
   </div>
 </template>
 
@@ -23,7 +39,7 @@
 import { port_status, server_kill, server_restart } from '@/api/cloud';
 import { onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-
+import {relevance, server_all} from '@/utils/fake_link_data';
 const state = reactive({
   server_name: "",
   port: "",
@@ -52,6 +68,17 @@ async function change_status() {
   }
 }
 
+async function to_relevance(item:relevance) {
+  const {host,port} = item
+  router.push({
+    path:'relevance',
+    query:{
+      host,
+      port
+    }
+  })
+}
+
 onMounted(() => {
   deal_params()
 })
@@ -59,21 +86,30 @@ onMounted(() => {
 </script>
 
 <style scoped lang="less">
-.card-header {
+
+.flex_sb{
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+    justify-content: space-between;
+    align-items: center;
 }
-
-.text {
-  font-size: 14px;
-}
-
-.item {
-  margin-bottom: 18px;
-}
-
-.box-card {
-  width: 480px;
+.box{
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start; 
+  .card-header {
+    .flex_sb()
+  }
+  
+  .box-card {
+    width: 480px;
+    margin: 0 20px;
+    .list{
+      .flex_sb();
+      .to_relevance{
+        cursor: pointer;
+        font-weight: 900;
+      }
+    }
+  }
 }
 </style>

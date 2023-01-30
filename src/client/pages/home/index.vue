@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { reactive, onMounted } from 'vue';
 import Upload from '@/components/upload/index.vue'
-import { test, list } from '@/api/cloud'
+import { list } from '@/api/cloud'
 import router from '@/router';
 // import StatusCharts from '@/components/echarts/status.vue'
 

@@ -12,6 +12,10 @@ let routes: RouteRecordRaw[] = [
     path: "/server",
     component: () => import("@/pages/server/index.vue"),
   },
+  {
+    path: "/relevance",
+    component: () => import("@/pages/relevance/index.vue"),
+  },
 ];
 const router = createRouter({
   routes,

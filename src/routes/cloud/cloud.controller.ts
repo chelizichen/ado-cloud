@@ -72,4 +72,10 @@ export class cloudController extends AdoNodeController {
   async get_tgz_list() {
     
   }
+
+  @Get("/interfaces_list")
+  public get_interfacecs_list(){
+    let list = this.cloudService.GetRpcMethods()
+    return ret.success(list)
+  }
 }

@@ -1,8 +1,10 @@
 import { Collect, Inject } from "ado-node";
 import { cloud } from "./cloud.entity";
 import { spawn, exec } from "node:child_process";
-import { mkdirSync, readdirSync } from 'fs'
+import { mkdirSync, readdirSync, readFileSync } from 'fs'
 import { get_port_status, timeout } from "../../utils";
+import path from "node:path";
+import yaml from 'yaml';
 
 @Collect()
 export class cloudService {
@@ -107,5 +109,13 @@ export class cloudService {
         } catch (e) {
             return false
         }
+    }
+
+    GetRpcMethods(){
+        let cwd = process.cwd()
+        let method_path = path.resolve(cwd,'public/server','AdoRpcProject/rpc/interface',"Hello.yaml")
+        const ctx = readFileSync(method_path, "utf-8")
+        const content = yaml.parse(ctx)
+        return content
     }
 }

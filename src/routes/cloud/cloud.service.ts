@@ -46,38 +46,23 @@ export class cloudService {
             // 进入当前目录 并且执行
             let run_cmd = `cd ${get_dir} &&  npm run preview`;
             console.log('run_cmd', run_cmd);
-
-            let c_process = spawn(run_cmd, {
-                stdio: "pipe",
-                shell: true,
-                env: process.env,
-            });
-            c_process.stderr.on("data", function (chunk) {
-                console.log("错误", chunk);
-            })
-            c_process.stdout.on("data", function (chunk) {
-                console.log("服务日志", chunk.toString());
-            });
+            this.run_server_cmd(run_cmd)
             resolve(true);
         })
     }
 
-    update() {
-        console.log("执行");
-
-        const std = spawn(
-            `cd public/server/AdoNodeTestServer && npm run preview`,
-            {
-                stdio: "pipe",
-                shell: true,
-                env: process.env,
-            }
-        );
-
-        std.stdout.on("data", function (chunk) {
-            console.log('写入', chunk.toString());
-        })
-
+    run_server_cmd(cmd:string) {
+        let c_process = spawn(cmd, {
+            stdio: "pipe",
+            shell: true,
+            env: process.env,
+        });
+        c_process.stderr.on("data", function (chunk) {
+            console.log("错误", chunk);
+        });
+        c_process.stdout.on("data", function (chunk) {
+            console.log("服务日志", chunk.toString());
+        });
     }
 
     deCompress(cmd: string) {
@@ -97,17 +82,7 @@ export class cloudService {
             let run_cmd = `cd public/server/${server_name} &&  npm run preview`;
             console.log("run_cmd", run_cmd);
 
-            let c_process = spawn(run_cmd, {
-                stdio: "pipe",
-                shell: true,
-                env: process.env,
-            });
-            c_process.stderr.on("data", function (chunk) {
-                console.log("错误", chunk);
-            });
-            c_process.stdout.on("data", function (chunk) {
-                console.log("服务日志", chunk.toString());
-            });
+            this.run_server_cmd(run_cmd)
             return true
         } else {
             return false

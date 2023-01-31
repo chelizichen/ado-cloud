@@ -38,7 +38,7 @@ export class cloudController extends AdoNodeController {
 
   @Post("/update")
   update(@Body() _body: cloud) {
-    this.cloudService.update();
+    // this.cloudService.update();
     return ret.success("成功");
   }
 

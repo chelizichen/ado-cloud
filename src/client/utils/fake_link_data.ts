@@ -15,58 +15,58 @@ type relevance_interface ={
 }
 
 type relevance = {
-    host:string,
-    port:string,
-    desc:string,
-    interfaces:relevance_interface[]
-}
+  host: string;
+  port: string;
+  desc: string;
+  interFace: relevance_interface[];
+};
 
-let server_all:relevance[] = [
-    {
-        host:"127.0.0.1",
-        port:"9000",
-        desc:"用户集微服务",
-        interfaces:[
-            {
-                name:"UserInterFace",
-                methods:[
-                    {
-                        name:"getList",
-                        req:"getListRequest",
-                        res:"getListResponse"
-                    },
-                    {
-                        name:"del",
-                        req:"delRequest",
-                        res:"delResponse"
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        host:"127.0.0.1",
-        port:"10012",
-        desc:"视频集微服务",
-        interfaces:[
-            {
-                name:"VedioInterFace",
-                methods:[
-                    {
-                        name:"getList",
-                        req:"getListRequest",
-                        res:"getListResponse"
-                    },
-                    {
-                        name:"del",
-                        req:"delRequest",
-                        res:"delResponse"
-                    }
-                ]
-            }
-        ]
-    }
-]
+let server_all: relevance[] = [
+  {
+    host: "127.0.0.1",
+    port: "9000",
+    desc: "用户集微服务",
+    interFace: [
+      {
+        name: "UserInterFace",
+        methods: [
+          {
+            name: "getList",
+            req: "getListRequest",
+            res: "getListResponse",
+          },
+          {
+            name: "del",
+            req: "delRequest",
+            res: "delResponse",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    host: "127.0.0.1",
+    port: "10012",
+    desc: "视频集微服务",
+    interFace: [
+      {
+        name: "VedioInterFace",
+        methods: [
+          {
+            name: "getList",
+            req: "getListRequest",
+            res: "getListResponse",
+          },
+          {
+            name: "del",
+            req: "delRequest",
+            res: "delResponse",
+          },
+        ],
+      },
+    ],
+  },
+];
 
 export {
     server_all

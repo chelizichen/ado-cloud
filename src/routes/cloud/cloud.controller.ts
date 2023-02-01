@@ -1,14 +1,18 @@
 import { AdoNodeController, Body, Controller, Get, Inject, Post, Query, Req } from "ado-node";
-import { writeFileSync } from "fs";
 import { ret } from "../../config/ret";
-import { QueryId } from "../../types";
+// import { QueryId } from "../../types";
 import { cloud } from "./cloud.entity";
 import { cloudService } from './cloud.service';
+import { serverService } from '../server/server.service';
 
 @Controller("/cloud")
 export class cloudController extends AdoNodeController {
   @Inject(cloudService)
   cloudService!: cloudService;
+
+  @Inject(serverService)
+  ServerService!: serverService;
+
 
   @Get("/list")
   async list() {
@@ -16,19 +20,17 @@ export class cloudController extends AdoNodeController {
     return ret.success(data);
   }
 
-  @Get("/run")
-  async run(@Query() query: QueryId) {
-    const data = await this.cloudService.run(query.id);
-    return ret.success(data);
-  }
-
   @Post("/upload")
   async upload(@Req() req: any, @Body() body: any) {
-    const { desc, name } = body;
-    console.log(desc);
+    const { name,  } = body;
+    console.log("body !!!!!!!!!", body);
+
     const file_path = `public/server/${name}`;
-    writeFileSync(file_path, req.files[0].buffer);
     try {
+      await this.cloudService.create_ws(
+        file_path,
+        req.files[0].buffer
+      );
       const is_run = await this.cloudService.run_upload(file_path);
       return ret.success(is_run);
     } catch (e) {
@@ -73,9 +75,10 @@ export class cloudController extends AdoNodeController {
     
   }
 
-  @Get("/interfaces_list")
-  public get_interfacecs_list(){
-    let list = this.cloudService.GetRpcMethods()
+  @Get("/get_micro_service")
+  public getMicroService(@Query() query: {server_name:string}) {
+    const { server_name } = query;
+    let list = this.cloudService.GetRpcMethods(server_name);
     return ret.success(list)
   }
 }

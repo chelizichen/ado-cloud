@@ -26,7 +26,7 @@
         </el-timeline> -->
       </div>
     </div>
-    <Upload :dialog-table-visible="state.dialogVs" @handle-close="handleClose"></Upload>
+    <Upload :dialog-table-visible="state.dialogVs" @handle-close="handleClose" :is_link_service="false"></Upload>
   </el-card>
 
 </template>
@@ -53,7 +53,12 @@ const state:_state = reactive({
 onMounted(async () => {
   // test()
   const data = await list()
-  state.server_list = data.data
+  state.server_list = data.data.map((el:any) => {
+    if (el.port.microService) {
+      el.port.server = el.port.microService
+    }
+    return el;
+  })
   console.log('data',data);
   
 })

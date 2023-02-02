@@ -6,6 +6,7 @@ import { appModule } from "./routes/app/app.module";
 import { LogGlobalPipe } from "./pipe/Log.pipe";
 import multer from "multer";
 import { ws_server_controller } from "./ws/server.controller";
+import { boost } from "./config/boost";
 @Modules({
   Modules: [appModule],
   GlobalPipes: [LogGlobalPipe],
@@ -16,6 +17,8 @@ AdoNodeServerImpl.runSSRServer((app: Express) => {
 
   ws_server_controller(app);
   
+  boost()
+
   app.use(express.static("dist/app"));
   app.use("/cloudserver",express.static("public/server"))
   app.use(cors());
@@ -23,4 +26,6 @@ AdoNodeServerImpl.runSSRServer((app: Express) => {
   app.get("*", (_req, res) => {
     res.sendFile(path.join(__dirname, "app/index.html"));
   });
+
+
 });

@@ -22,7 +22,7 @@ export class serverService {
       link_server_id: link_id,
     });
     return {
-      master_server,
+      master_server,                                  
       link_server,
     };
   }

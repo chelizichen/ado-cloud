@@ -1,0 +1,9 @@
+{
+  "servant": [
+    {
+      "name": "AdoRpcProject",
+      "port": "10012",
+      "host": "127.0.0.1"
+    }
+  ]
+}

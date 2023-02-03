@@ -27,3 +27,12 @@
 4、 客户端 通过云服务平台 发现相关微服务
 5、 云服务平台 代理转发 消费 关联微服务事件
 ````
+
+- 2.3 Update
+````txt
+1、 修改了微服务架构， 将  B/C 端 对 MicroService端 的 点对点链接模式 修改为 B/C <-> ProxyService <-> MicroService 的模式
+2、 将 ProxyService 作为微服务网关层 ，B/C 端 Service 不再提供 微服务直连，只允许 Http 请求到 ProxyService 代理层 ，使得服务再一次解耦。
+3、 微服务网关层与云服务层共用一个端口，并且代理 所有 微服务的事件
+4、 代码层面 去除 RpcClientController 等 装饰器，优化代码结构。
+
+````

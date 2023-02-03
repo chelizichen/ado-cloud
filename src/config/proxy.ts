@@ -14,6 +14,7 @@ class ArcProxy {
   port: number;
   key: string;
   intervalConnect: any = false;
+  _config_info_: any;
 
   constructor(host: string, port: number) {
     this.host = host;
@@ -28,9 +29,16 @@ class ArcProxy {
   }
 
   register_events() {
-    this.socket.on("connect", () => {
+    this.socket.on("connect", async () => {
       this.clearIntervalConnect();
       console.log("connected to server", "TCP");
+      const data = (await this.recieve_from_microService()) as Buffer;
+      let is_config_info = data.subarray(0, 6).toString() == "[info]";
+      if (is_config_info) {
+        let _config_info_ = data.subarray(6, data.length);
+        console.log(_config_info_.toString());
+        this._config_info_ = _config_info_;
+      }
     });
 
     this.socket.on("error", (err) => {
@@ -45,7 +53,6 @@ class ArcProxy {
     this.socket.on("end", () => {
       this.launchIntervalConnect();
     });
-
   }
 
   connect() {
@@ -57,23 +64,26 @@ class ArcProxy {
 
   write(buf: Buffer) {
     return new Promise((resolve, reject) => {
+      console.log('this',this);
       this.socket.write(buf, async (err) => {
         if (err) {
           reject(err);
         }
-        const data = await this.recieve();
+        const data = await this.recieve_from_microService();
         resolve(data);
       });
     });
   }
 
-  recieve() {
+  recieve_from_microService() {
     return new Promise((resolve) => {
       this.socket.on("data", function (chunk: Buffer) {
         resolve(chunk);
       });
     });
   }
+
+  recieve_from_client() {}
 
   launchIntervalConnect() {
     if (this.intervalConnect) {

@@ -6,7 +6,9 @@ import { appModule } from "./routes/app/app.module";
 import { LogGlobalPipe } from "./pipe/Log.pipe";
 import multer from "multer";
 import { ws_server_controller } from "./ws/server.controller";
-import { boost } from "./config/boost";
+import { proxyService } from "./routes/proxy/proxy.service";
+
+
 @Modules({
   Modules: [appModule],
   GlobalPipes: [LogGlobalPipe],
@@ -14,10 +16,13 @@ import { boost } from "./config/boost";
 class AdoNodeServerImpl extends AdoNodeServer {}
 
 AdoNodeServerImpl.runSSRServer((app: Express) => {
-
+  
   ws_server_controller(app);
   
-  boost()
+  // 启动微服务
+  setImmediate(async () => {
+      await proxyService.boost();
+  })
 
   app.use(express.static("dist/app"));
   app.use("/cloudserver",express.static("public/server"))

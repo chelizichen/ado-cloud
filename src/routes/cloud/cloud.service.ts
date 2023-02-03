@@ -33,7 +33,6 @@ export class cloudService {
           "/public/server/" +
           _curr +
           "/ado.config.js");
-        console.log("_port", _port);
         let _item = { port: _port, server: _curr };
         _list.push(_item);
       }
@@ -145,6 +144,10 @@ export class cloudService {
       "ado.config.js"
     );
     const config = require(config_path);
-    return { contents, config };
+    if (config.microService) {
+      return { contents, config, message: 'MicroService' };
+    } else {
+      return { contents, config, message: "NodeService" };
+    }
   }
 }

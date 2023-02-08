@@ -29,6 +29,7 @@
 ````
 
 - 2.3 Update
+
 ````txt
 1、 修改了微服务架构， 将  B/C 端 对 MicroService端 的 点对点链接模式 修改为 B/C <-> ProxyService <-> MicroService 的模式
 2、 将 ProxyService 作为微服务网关层 ，B/C 端 Service 不再提供 微服务直连，只允许 Http 请求到 ProxyService 代理层 ，使得服务再一次解耦。

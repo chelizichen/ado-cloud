@@ -9,6 +9,8 @@ class ArcProxy {
     return `-h ${host} -p ${port}`;
   }
 
+  java = false;
+
   socket: Socket;
   host: string;
   port: number;
@@ -63,8 +65,11 @@ class ArcProxy {
   }
 
   write(buf: Buffer) {
+    if (this.java) {
+      const { concat, from } = Buffer;
+      buf = concat([buf, from("[#ENDL#]\n")]);
+    }
     return new Promise((resolve, reject) => {
-      console.log('this',this);
       this.socket.write(buf, async (err) => {
         if (err) {
           reject(err);

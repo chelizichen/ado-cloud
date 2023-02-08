@@ -53,8 +53,12 @@ export class proxyService {
       proxyService.MicroServices = new Map<string, ArcProxy>();
       config.servant.forEach((net: any) => {
         let proxy_instance = new ArcProxy(net.host, parseInt(net.port));
+        let isJava = net.type == "java"
+        if (isJava) {
+          proxy_instance.java = true
+        }
         const { key } = proxy_instance;
-        console.log(key);
+        console.log("key", key);
         proxyService.MicroServices.set(key, proxy_instance);
       });
     });

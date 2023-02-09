@@ -69,6 +69,8 @@ class ArcProxy {
       const { concat, from } = Buffer;
       buf = concat([buf, from("[#ENDL#]\n")]);
     }
+    console.log(buf.toString());
+    
     return new Promise((resolve, reject) => {
       this.socket.write(buf, async (err) => {
         if (err) {

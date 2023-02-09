@@ -51,7 +51,8 @@ export function  getRequestArgs<K extends string | Record<string, any> | Array<a
             let _ret = getRequestArgs(args[v] as any);
             _args += size[init++] + _ret;
         }
-        _args += size[init];
+      _args += size[size.length - 1];
+      
         // 尾部添加参数
         return _args;
     }
@@ -63,39 +64,12 @@ let proto = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "#"].map((item) => {
   return "[#" + item + "]";
 });
 
-
-let size = [
-  "a",
-  "b",
-  "c",
-  "d",
-  "e",
-  "f",
-  "g",
-  "h",
-  "i",
-  "j",
-  "k",
-  "l",
-  "m",
-  "n",
-  "o",
-  "p",
-  "q",
-  "r",
-  "s",
-  "t",
-  "u",
-  "v",
-  "w",
-  "x",
-  "y",
-  "z",
-  "-",
-  "=",
-  "/",
-  ".",
-  ",",
-].map((item) => {
-  return "#" + item + "#";
-});
+let size = ["a",
+    "b", "c", "d",
+    "e", "f", "g", "h", "i",
+    "j", "k", "l", "m",
+    "n", "o", "p", "q", "r", 's',
+    't', 'u', "v", "w", "x", "y",
+    "z"].map(item => {
+        return "#" + item + "#"
+    })

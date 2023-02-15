@@ -17,7 +17,9 @@ export class proxyController extends AdoNodeController {
     key:string
   }) {
     console.log(body);
-
+    body.data['ArcData'] = "End"
+    console.log('body.data',body.data);
+    
     let data = await proxyService.transmit(body) as Buffer
     let _tostr_ = data.toString()
     return {
